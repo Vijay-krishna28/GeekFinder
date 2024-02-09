@@ -1,0 +1,97 @@
+const AWS = require('aws-sdk');
+const DynamoDb = new AWS.DynamoDB({region: 'us-east-1'});
+
+
+
+exports.handler = async (event) => {
+  
+  
+    //console.log(event);
+   
+   if (event.triggerSource && event.triggerSource == 'PostConfirmation_ConfirmSignUp') {
+        if (event.request && event.request.userAttributes && event.request.userAttributes.sub) {
+          
+            
+            const playerId = event.request.userAttributes.sub;
+            const email  =   event.request.userAttributes.email;
+            
+            const location = event.request.userAttributes.zoneinfo;
+            const birthday = event.request.userAttributes.birthdate;
+            const gender  =  event.request.userAttributes.gender;
+            const profileUrl=event.request.userAttributes.picture;
+            const phoneNo=   event.request.userAttributes.phone_number;
+            const familyName = event.request.userAttributes.family_name;
+            const userName = event.request.userAttributes.preferred_username;
+            
+            
+            
+            
+            const dynamoDbRequestParams = {
+                TableName: 'GF-userData',
+                Item: {
+                    username: {S: userName},
+                    userid : {S : playerId},
+                    email:    {S: email},
+                    location: {S: location},
+                    birthdate: {S: birthday},
+                    gender: {S: gender},
+                    profileUrl: {S: profileUrl},
+                    phoneno: {S: phoneNo},
+                    familyName: {S: familyName},
+                    college : {S : ''},
+                    cgpa : {N : '0'},
+                    topics : {L : []},
+                    posts : {L : []},
+                    likes :{N : '0'},
+                    comments :{N : '0'},
+                    friends : {L : []},
+                    messages: {L:[]},
+                    notifications:{L:[]}
+                    
+                
+                    
+                }
+            };
+            
+               await DynamoDb.putItem(dynamoDbRequestParams)
+            .promise().then(data => {
+           
+    
+                
+            })
+            .catch(err => {
+                throw(err); 
+            });
+           
+             
+             dynamoDbRequestParams = {
+                TableName: 'GF-playerConnections',
+                Item: {
+                    userName: {S: userName},
+                    connectionId:{S:''}
+                
+                }
+            };
+            
+            console.log(dynamoDbRequestParams);
+            
+            await DynamoDb.putItem(dynamoDbRequestParams)
+            .promise().then(data => {
+           
+    
+                
+            })
+            .catch(err => {
+                throw(err); 
+            });
+           
+           
+            
+        }
+    }
+    
+    
+    return event;
+  
+  
+};

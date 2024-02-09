@@ -1,0 +1,108 @@
+const AWS = require('aws-sdk');
+const DynamoDb = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
+
+
+
+async function  addPostToUser(username,postid)  {
+    
+    
+  const docClient = new AWS.DynamoDB.DocumentClient();
+  
+
+  
+
+  let params = {
+    TableName: 'GF-userData',
+    Key: {
+      username: username,
+    },
+   
+    ReturnValues: 'ALL_NEW',
+    UpdateExpression: 'set #posts = list_append(#posts,:item)',
+    ExpressionAttributeNames: {
+      '#posts': 'posts'
+    },
+    ExpressionAttributeValues: {
+      ':item': [postid]
+    }
+  };
+    return await docClient.update(params).promise();
+ 
+ 
+
+    
+    
+}
+
+
+exports.handler = async (event) => {
+    // TODO implement
+    
+   //initial string
+    const body=JSON.parse(event.body);
+    //const body=event.body;
+    console.log(body);   
+  
+            
+            
+            const dynamoDbRequestParamsuserData = {
+                TableName: 'GF-posts',
+                Item: {
+                    postid: body.postid,
+                    Name:body.postname,
+                    description : body.description,
+                    image :body.imageLink,
+                    likes :body.likes,
+                    userName :body.username,
+                    userProfilePic :body.userprofilepic,
+                    comments:[],
+                    versions: body.versions,
+                    youtubeLink :body.youtubelink,
+                    githubLink :body.githublink,
+                    college : body.college,
+                    topics:body.topics,
+                    locations:body.locations
+                    
+                    
+                }
+            };
+            
+            
+            console.log(dynamoDbRequestParamsuserData);
+            
+            await DynamoDb.put(dynamoDbRequestParamsuserData)
+            .promise().then(data => {
+               
+                
+            })
+            .catch(err => {
+                throw(err); 
+            });
+            
+            
+            
+           let finalData= await addPostToUser(body.username,body.postid);
+            
+            
+             
+           let    response = {
+                statusCode: 200,
+                 headers: {
+                "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+               
+              },
+                body: JSON.stringify({
+                'playerData': finalData
+                         
+                    })
+                };
+                
+            console.log(response);    
+                
+           return response;
+            
+   
+   
+   
+   
+};

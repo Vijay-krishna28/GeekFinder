@@ -1,0 +1,104 @@
+
+var AWS = require('aws-sdk');
+const DynamoDb = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
+
+
+
+async function  getSearchData(searchterm)  {
+    
+   // Create DynamoDB document client
+   
+   console.log(searchterm);
+   let temp;
+   
+   let result=[]
+       
+       //now searching for posts
+       
+           var params = {
+         TableName: 'GF-posts',
+          FilterExpression: "begins_with(college,:searchterm) or begins_with(locations,:searchterm) or  begins_with(#posterName,:searchterm) or begins_with(userName,:searchterm) or begins_with(topics,:searchterm)",
+          
+        ExpressionAttributeValues: { ":searchterm": searchterm },
+         ExpressionAttributeNames: {
+            "#posterName": "Name",
+        },
+
+        };
+        
+         temp=await DynamoDb.scan(params).promise();
+         result.push(temp.Items);
+   
+   
+   
+   
+   
+
+        //now searching for profiles
+           var params = {
+         TableName: 'GF-userData',
+          FilterExpression: "begins_with(username,:searchterm) or begins_with(college,:searchterm) or  begins_with(familyName,:searchterm) or begins_with(#locations,:searchterm)",
+          
+        ExpressionAttributeValues: { ":searchterm": searchterm },
+         ExpressionAttributeNames: {
+            "#locations": "location",
+        },
+
+        };
+        
+         temp=await DynamoDb.scan(params).promise();
+         result.push(temp.Items);
+       
+        
+        return result;
+            
+}
+
+
+
+
+
+exports.handler = async (event) => {
+  
+  //const body=event.body;
+  const body=JSON.parse(event.body);
+  
+  const searchterm=body.searchterm;
+  
+  
+  
+    let finalData= await getSearchData(searchterm);
+   
+    console.log(finalData[0].length);
+    console.log(finalData[1].length);
+    
+   
+   
+   let response = {
+                statusCode: 200,
+                 headers: {
+                "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+               
+              },
+                body: JSON.stringify({
+                'searchData': finalData
+                         
+                    })
+                };
+                
+            
+                
+           return response;
+    
+   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+};

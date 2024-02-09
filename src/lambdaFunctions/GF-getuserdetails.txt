@@ -1,0 +1,97 @@
+
+const AWS = require('aws-sdk');
+
+const Cognito = new AWS.CognitoIdentityServiceProvider({region: 'us-east-1'});
+
+
+
+async function getData(username) {
+  let documentClient = new AWS.DynamoDB.DocumentClient();
+  let params = {
+    TableName: 'GF-userData',
+     Key: {'username': username}
+  };
+  let userDetails = await documentClient.get(params).promise();
+  
+  
+  return {"userDetails":userDetails.Item};
+}
+
+async function getPosts(posts) {
+    
+ 
+  let documentClient = new AWS.DynamoDB.DocumentClient();
+  let result=[];
+  
+  for(const postid of posts)
+  {
+    let params = {
+        TableName: 'GF-posts',
+         Key: {'postid': postid}
+      };
+      let userDetails = await documentClient.get(params).promise();
+      
+      result.push(userDetails.Item);
+  }
+  
+  return result;
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exports.handler = async (event) => {
+    // TODO implement
+  
+  const body=JSON.parse(event.body);
+  //const body=event.body;
+  
+  const userName=body.username;
+  
+  
+  
+   let playerData = await getData(userName);
+    console.log(playerData);
+    console.log(playerData.userDetails.posts);
+    
+    
+    
+    let postsData = await getPosts(playerData.userDetails.posts);
+    
+    //console.log(postsData);
+    
+    
+    playerData.userDetails.posts=postsData;
+      
+     let   response = {
+                statusCode: 200,
+                 headers: {
+                "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+               
+              },
+                body: JSON.stringify({
+                'playerData': playerData
+                         
+                    })
+                };
+                
+            console.log(response);    
+                
+           return response;
+    
+  
+  
+};

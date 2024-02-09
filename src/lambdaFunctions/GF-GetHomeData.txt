@@ -1,0 +1,99 @@
+var AWS = require('aws-sdk');
+const DynamoDb = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
+
+
+
+
+
+async function  getHomeData(locations,topics,college,username)  {
+    
+   // Create DynamoDB document client
+   
+   console.log(locations,topics,college);
+   let temp;
+   
+   let result=[]
+        
+           var params = {
+         TableName: 'GF-posts',
+          FilterExpression: "begins_with(college,:college) or begins_with(locations,:location) or  begins_with(topics,:topics)",
+          
+        ExpressionAttributeValues: { ":college" : college ,
+        ":location" : locations,
+        ":topics" : topics
+        
+        }
+        };
+        
+         temp=await DynamoDb.scan(params).promise();
+         result.push(temp.Items);
+   
+   
+   
+   
+   
+
+        //now searching for profiles
+           var params = {
+         TableName: 'GF-userData',
+          FilterExpression: "begins_with(college,:college) or begins_with(locations,:location) or  begins_with(topics,:topics)",
+          
+        ExpressionAttributeValues: { ":college" : college ,
+        ":location" : locations,
+        ":topics" : topics
+        
+        }
+
+        };
+        
+         temp=await DynamoDb.scan(params).promise();
+         result.push(temp.Items);
+       
+   
+        
+        return result;
+            
+}
+
+
+
+exports.handler = async (event) => {
+   
+   const body=JSON.parse(event.body);
+   //const body=event.body;
+   
+   const locations =body.locations;
+   const topics = body.topics;
+   const college=body.college;
+   
+    let finalData= await getHomeData(locations,topics,college,body.username);
+   
+   
+   let response = {
+                statusCode: 200,
+                 headers: {
+                "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+               
+              },
+                body: JSON.stringify({
+                'homeData': finalData
+                         
+                    })
+                };
+                
+            console.log(response);    
+                
+           return response;
+    
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+};

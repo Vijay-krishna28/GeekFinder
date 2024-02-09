@@ -1,0 +1,132 @@
+.InboxContainer
+{
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+
+}
+
+.InboxContainer p{
+    color: white;
+}
+.messagesSection
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.profilesContainer
+{
+
+  display: flex;
+  flex: 0.8;
+  flex-direction: column;
+  overflow-y: scroll;
+  align-items: flex-start;
+  height:680px;
+  width: 250px;
+
+}
+
+
+.messageUserProfile
+{
+   
+}
+
+.messageProfileSubContainer
+{
+  display: flex;
+  flex-direction: row;
+ 
+
+}
+
+.msgProfilePic
+{
+        width: 100px;
+        object-fit: contain;
+        border-radius: 50%;
+
+}
+
+.messagesContainer
+{
+    display: flex;
+    flex-direction: column;
+   
+
+}
+
+.inputMessages
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+ 
+ 
+
+}
+
+.input-tag
+{
+    border:0px;
+    background-color: black;
+    font-size: 25px;
+    color:white;
+    border-bottom: 2px solid white;
+    outline: none;
+
+}
+.input-tag:hover
+{
+    border:0px ;
+    border-bottom: 2px solid yellow;
+
+}
+
+.recriuterloginButton
+{
+   background-color: black;
+   color: white;
+   border: none;
+   background: none;
+ 
+
+}
+
+
+
+.recriuterloginButton  :hover{
+
+    color: gray;
+    cursor: pointer;
+    
+
+}
+
+.recriuterloginButton >p
+{
+  font-size: 30px;
+}
+
+
+.messages
+{
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  width:1200px;
+  height:500px
+
+}
+
+.message {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  max-width: 60%;
+}
+
+
+

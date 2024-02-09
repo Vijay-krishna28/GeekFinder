@@ -1,0 +1,46 @@
+
+const AWS = require('aws-sdk');
+const DynamoDb = new AWS.DynamoDB({region: 'us-east-1'});
+
+
+exports.handler = async (event) => {
+    
+    
+    const body=JSON.parse(event.body);
+    
+    //adding userid to dynamodb table
+    
+    
+    
+    const userName=body.userName;
+    
+    const connectionId=event.requestContext.connectionId;
+    
+    const dynamoDbRequestParams = {
+                TableName: 'GF-playerConnections',
+                Item: {
+                    userName: {S: userName},
+                    connectionId:{S:connectionId}
+                    
+                }
+            };
+            
+            
+            console.log(dynamoDbRequestParams);
+            
+            await DynamoDb.putItem(dynamoDbRequestParams)
+            .promise().then(data => {
+                
+                console.log(data);
+               
+                
+            })
+            .catch(err => {
+                 console.log("failure");
+                console.log(err);
+                throw(err); 
+            });     
+    
+    
+    
+};

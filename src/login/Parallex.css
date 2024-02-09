@@ -1,0 +1,22 @@
+.parallax {
+    /* The image used */
+    /*background-image: url('https://cdn.vox-cdn.com/thumbor/XS92XLiBCG8GfldVdAV4vcP2uDk=/0x0:1280x720/1200x800/filters:focal(538x258:742x462)/cdn.vox-cdn.com/uploads/chorus_image/image/70275149/maxresdefault.0.jpg');*/
+  /* Full height */
+    height: 100%; 
+
+  
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding:25%;
+  }
+
+.text
+{
+    height:1000px;
+    background-color:transparent;
+    font-size:36px;
+  
+}

@@ -1,0 +1,191 @@
+const AWS = require('aws-sdk');
+const DynamoDb = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
+
+const api = new AWS.ApiGatewayManagementApi({
+  endpoint: 'your api-endpoint'
+})
+
+
+
+
+
+async function getConnectionId(userName) {
+  let documentClient = new AWS.DynamoDB.DocumentClient();
+  let params = {
+    TableName: 'GF-playerConnections',
+     Key: {'userName': userName}
+  };
+  let result = await documentClient.get(params).promise();
+  console.log(result);
+  return result;
+}
+
+
+
+
+async function  updateLikes(postid,likes)  {
+ 
+ 
+ 
+ const docClient = new AWS.DynamoDB.DocumentClient();
+ 
+  let params = {
+    TableName: 'GF-posts',
+    Key: {
+      postid: postid,
+    },
+    UpdateExpression: 'set likes = :item',
+    ExpressionAttributeValues: {
+      ':item': likes
+    }
+  };
+  
+    console.log(params);
+  
+    return await docClient.update(params).promise();
+ 
+ 
+
+    
+    
+}
+
+
+async function  updateComment(postid,commentJson)  {
+ 
+ 
+ console.log(commentJson);
+ const docClient = new AWS.DynamoDB.DocumentClient();
+ 
+  let params = {
+    TableName: 'GF-posts',
+    Key: {
+      postid: postid,
+    },
+    UpdateExpression: 'set comments = list_append(comments,:item)',
+    ExpressionAttributeValues: {
+      ':item': [commentJson]
+    }
+  };
+  
+   
+  
+    return await docClient.update(params).promise();
+ 
+ 
+
+    
+    
+}
+
+
+exports.handler = async (event) => {
+    
+    
+  const body=JSON.parse(event.body);
+   // const body=event.body;
+    
+    const postid=body.postid;
+    const type=body.type;
+    
+    if(type==="commenting")
+    {
+        
+        const username=body.username;
+        const userprofilepic=body.profilepic;
+        const comment=body.comment;
+        const commentJson ={
+            username:username,
+            userprofilepic:userprofilepic,
+            comment:comment
+            
+            
+        };
+        
+          let finalData= await updateComment(postid,commentJson) ;
+            
+            
+             
+           let    response = {
+                statusCode: 200,
+                 headers: {
+                "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+               
+              },
+                body: JSON.stringify({
+                'playerData': finalData
+                         
+                    })
+                };
+                
+            console.log(response);    
+                
+           return response;
+        
+        
+    }
+    else
+    {
+        if(type==="incrementLike")
+        {
+            
+            const likes=parseInt(body.likes)+1;
+            let finalData= await updateLikes(postid,likes) ;
+            
+            
+             
+           let    response = {
+                statusCode: 200,
+                 headers: {
+                "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+               
+              },
+                body: JSON.stringify({
+                'playerData': finalData
+                         
+                    })
+                };
+                
+            console.log(response); 
+            
+            
+            const receiverName=body.receiver;
+            const receiverConnectionDetails=await getConnectionId(receiverName);
+            
+            
+              const result=  await replyToMessage({
+                      "senderName":body.sender,
+                      "message":"liked your post"
+                      
+                      
+                  },"notification", receiverConnectionDetails.Item.connectionId);
+                  
+            
+            
+            
+            
+            
+                
+           return response;
+            
+            
+        }
+    }
+    
+    
+   
+};
+
+
+
+async function replyToMessage(response,type, connectionId) {
+    const params = {
+      ConnectionId: connectionId,
+      Data: Buffer.from(JSON.stringify( {message: response,"type":type }))
+    };
+    
+    console.log(params);
+
+    return api.postToConnection(params).promise()
+}
+

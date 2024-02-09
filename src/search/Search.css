@@ -1,0 +1,17 @@
+.searchroot
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.header
+{
+    flex: 0.3;
+}
+
+.peopleSearch
+{
+    flex: 0.6;
+}
+
+

@@ -1,0 +1,128 @@
+.mainHeader
+{
+   display: flex;
+   background-color: black;
+   position: sticky ;
+}
+
+.placeholderDiv
+{
+   flex:0.3
+
+}
+
+.iconDiv
+{
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+ 
+ 
+
+}
+
+.icon
+{
+    
+  object-fit: contain;
+  padding-top: 3%;
+  width: 80px;
+  flex: 0.8;
+  
+ 
+ 
+}
+
+.iconDiv >p{
+
+    color: white;
+    font-size: 20px;
+    align-items: flex-start;
+   flex: 0.2;
+  
+
+
+}
+
+
+.loginButtonPart
+{
+    display: flex;
+    flex: 0.4;
+    flex-direction: row;
+    justify-content:space-evenly;
+
+
+}
+
+.recriuterloginButton
+{
+   background-color: black;
+   color: white;
+   border: none;
+   background: none;
+
+}
+
+.recriuterloginButton > a{
+
+    font-size: 20px;
+    
+    color: white;
+    
+    style:none;
+
+}
+
+.recriuterloginButton > a:hover{
+
+    color: gray;
+    cursor: pointer;
+    
+
+}
+
+
+
+.studentloginButton
+{
+
+    background-color: black;
+    color: white;
+    
+    border: none;
+    background: none;
+ 
+
+}
+
+.studentloginButton > a{
+
+    font-size: 20px;
+    style:none;
+    color: white;
+
+}
+
+.studentloginButton > a:hover{
+
+    color: gray;
+    cursor: pointer;
+    
+
+}
+
+
+.hrStyle
+{
+   
+    
+    border: none;
+    height: 0px;
+    /* Set the hr color */
+    color: #333; /* old IE */
+    background-color: #333; /* Modern Browsers */
+ 
+
+}

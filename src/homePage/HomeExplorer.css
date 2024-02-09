@@ -1,0 +1,14 @@
+.root
+{
+   
+    display: flex;
+    flex-direction: column;
+
+}
+
+.root > h2
+{
+    color: white;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}

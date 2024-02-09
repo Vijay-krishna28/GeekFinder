@@ -1,0 +1,98 @@
+const AWS = require('aws-sdk');
+const Cognito = new AWS.CognitoIdentityServiceProvider({region: 'us-east-1'});
+const https = require('https');
+const DynamoDb = new AWS.DynamoDB({region: 'us-east-1'});
+
+
+async function getData(username) {
+  let documentClient = new AWS.DynamoDB.DocumentClient();
+  let params = {
+    TableName: 'GF-userData',
+     Key: {'username': username}
+  };
+  let userDetails = await documentClient.get(params).promise();
+  
+  
+  return {"userDetails":userDetails.Item};
+}
+
+
+
+
+
+async function  updateDetails(collegeName,cgpa,profileUrl,Interests,userName)  {
+    
+    
+   // console.log("inside update name");
+    //console.log(sub);
+    //console.log(pictureLink);
+    //console.log(userName);
+    
+    
+  const docClient = new AWS.DynamoDB.DocumentClient();
+
+  
+
+  const params = {
+    TableName: 'GF-userData',
+    Key: {
+      username: userName,
+    },
+    UpdateExpression: 'set college = :x , cgpa = :y, profileUrl = :z, topics = :a',
+    ExpressionAttributeValues: {
+      ':x': collegeName,
+      ':y': cgpa,
+      ':z': profileUrl,
+      ':a': Interests
+    },
+    ReturnValues:"UPDATED_NEW"
+  };
+    let result = await docClient.update(params).promise();
+  //console.log(result);
+  return result;
+ 
+    
+    
+}
+
+
+
+exports.handler = async (event) => {
+    
+    const body=JSON.parse(event.body);
+    //const body=event.body;
+    const collegeName=body.collegeName;
+    const cgpa=body.cgpa;
+    const profileUrl=body.profileUrl;
+    //string ["ML","CS"]
+    const Interests=body.interests.split(" ");
+    const userName=body.userName;
+    
+    
+    let finalData= await updateDetails(collegeName,cgpa,profileUrl,Interests,userName);
+    
+   
+    
+    
+       
+ 
+      
+        
+    let playerData = await getData(userName);
+      
+       let response = {
+                statusCode: 200,
+                 headers: {
+                "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+               
+              },
+                body: JSON.stringify({
+                'playerData': playerData
+                         
+                    })
+                };
+                
+            console.log(response);    
+                
+           return response;
+};

@@ -1,0 +1,55 @@
+.profileInforoot
+{
+   display: flex;
+   flex-direction: row;
+   background-color: black;
+ 
+
+}
+
+.leftheader
+{
+    flex:0.3;
+    border: 2px solid white;
+    
+}
+
+
+.leftHeaderSection
+{
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+
+}
+
+.leftheader > img
+{
+    align-items: center;
+    margin-left: 15%;
+    
+}
+
+
+.profilePic
+{
+    border-radius: 50%;
+}
+
+.leftheader > p
+{
+   color: white;
+   
+   margin-left: 15%;
+
+}
+
+
+.profileInfoContainer
+{
+    flex: 0.7;
+    overflow-y: scroll;
+    align-items: center;
+    height:1000px;
+
+}

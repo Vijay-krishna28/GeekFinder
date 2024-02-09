@@ -1,0 +1,66 @@
+.skeleton_container {
+    background-color: rgb(252, 249, 249);
+    overflow: hidden;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    box-shadow: 9px 17px 45px -29px rgba(0, 0, 0, 0.44);
+     animation: loading 1.5s infinite;
+  }
+  .skeleton_element {
+    background-color: rgb(207, 204, 204);
+    width: 50px;
+    border-radius: 50%;
+    margin: 1.5% 5% 0 5%;
+    animation: loading 1.5s infinite;
+  }
+  .skeleton_element_text {
+    background-color: rgb(224, 220, 220);
+    width: 50px;
+    height: 15px;
+    margin: 5% 5% 0 5%;
+    border-radius: 2px;
+    animation: loading 1.5s infinite;
+  }
+  
+  @keyframes loading {
+    from {
+      background-color: rgb(207, 204, 204);
+    }
+    to {
+      background-color: grey;
+    }
+  }
+  
+  /*.skeleton_loading {
+    background-color: #ccc;
+    overflow: hidden;
+  }
+  .skeleton_loading::after {
+    display: block;
+    overflow: hidden;
+    content: "";
+    position: absolute;
+    width: 200px;
+    height: 230px;
+    margin-top: 1%;
+    /*transform: translateX(0%);
+    background: -webkit-gradient(
+      linear,
+      left top,
+      right top,
+      from(rgba(235, 34, 34, 0.2)),
+      color-stop(rgba(235, 34, 34, 0.2)) to(rgba(235, 34, 34, 0.2))
+    );
+    background: linear-gradient(
+      90deg,
+      rgb(158, 158, 158),
+      transparent,
+      transparent
+    );*/
+  
+  /* Adding animation 
+    animation: loading 1.5s infinite;
+  }*/
+  
+  /* Loading Animation */

@@ -1,0 +1,25 @@
+.homebodyroot
+{
+    display: flex;
+    flex-direction: row;
+    margin-top: 2%;
+
+}
+
+.filter
+{
+   
+     flex: 0.3;
+
+}
+
+.postContainer
+{
+    flex: 0.9;
+    overflow-y: scroll;
+    align-items: center;
+    height:1000px;
+
+}
+
+  

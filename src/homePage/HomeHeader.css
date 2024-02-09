@@ -1,0 +1,197 @@
+.mainHeader
+{
+   display: flex;
+   background-color: black;
+   position: sticky ;
+ 
+
+
+}
+
+.placeholderDiv
+{
+   flex:0.1
+
+}
+
+.iconDiv
+{
+
+  display: flex;
+  flex: 0.2;
+  flex-direction: column;
+  margin-left: 1%;
+ 
+ 
+
+}
+
+.input-element
+{
+    background-color:black;
+    justify-content: center;
+    align-items: center;
+    flex:0.5;   
+    display: flex;
+    
+    
+}
+.input-element >i
+{
+    color: white;
+}
+
+.input-tag
+{
+    border:0px;
+    background-color: black;
+    font-size: 25px;
+    color:white;
+    border-bottom: 2px solid white;
+    outline: none;
+
+}
+.input-tag:hover
+{
+    border:0px ;
+    border-bottom: 2px solid yellow;
+
+}
+
+
+.icon
+{
+    
+  object-fit: contain;
+  padding-top: 1%;
+  width: 80px;
+  flex: 0.1;
+  
+ 
+ 
+}
+
+.iconDiv >p{
+
+    color: white;
+    font-size: 10px;
+    align-items: flex-start;
+   flex: 0.2;
+  
+
+
+}
+
+
+.HomeHeaderRight
+{
+    display: flex;
+    flex: 0.9;
+    flex-direction: row;
+    justify-content:space-evenly;
+
+
+}
+
+.headerButton
+{
+   background-color: black;
+   color: white;
+   border: none;
+   background: none;
+   flex: 0.2;
+
+}
+
+.headerButton > p{
+
+    font-size: 20px;
+
+}
+
+.headerButton > p:hover{
+
+    color: gray;
+    cursor: pointer;
+    
+
+}
+
+.profilePic
+{
+  
+    object-fit: contain;
+    width: 50px;
+   
+    
+  
+
+}
+
+
+
+.studentloginButton
+{
+
+    background-color: black;
+    color: white;
+    
+    border: none;
+    background: none;
+ 
+
+}
+
+.studentloginButton > p{
+
+    font-size: 20px;
+
+}
+
+.studentloginButton > p:hover{
+
+    color: gray;
+    cursor: pointer;
+    
+
+}
+
+
+.hrStyle
+{
+   
+    
+    border: none;
+    height: 0px;
+    /* Set the hr color */
+    color: #333; /* old IE */
+    background-color: #333; /* Modern Browsers */
+ 
+
+}
+
+.notifications {
+    position: absolute;
+    top: 55px;
+    right: 200px;
+    background-color: white;
+    color: black;
+    font-weight: 300;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+  
+  .notification {
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  .notificationContainer
+  {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+  }
+  

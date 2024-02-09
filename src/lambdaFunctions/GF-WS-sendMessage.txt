@@ -1,0 +1,308 @@
+
+const AWS = require('aws-sdk');
+
+
+const api = new AWS.ApiGatewayManagementApi({
+  endpoint: 'yourapiendpoint'
+})
+
+
+
+
+async function getConnectionId(userName) {
+  let documentClient = new AWS.DynamoDB.DocumentClient();
+  let params = {
+    TableName: 'GF-playerConnections',
+     Key: {'userName': userName}
+  };
+  let result = await documentClient.get(params).promise();
+  //console.log(result);
+  return result;
+}
+
+
+
+
+
+async function getData(username) {
+  let documentClient = new AWS.DynamoDB.DocumentClient();
+  let params = {
+    TableName: 'GF-userData',
+     Key: {'username': username}
+  };
+  let userDetails = await documentClient.get(params).promise();
+  
+    return {"userDetails":userDetails.Item};
+
+    
+}
+
+async function  addMessage(senderName,receiverName,senderItem,receiverItem)  {
+    
+    
+    //console.log(senderItem);
+    //console.log(receiverItem);
+    
+  const docClient = new AWS.DynamoDB.DocumentClient();
+  
+  let result=[];
+  
+
+  let params = {
+    TableName: 'GF-userData',
+    Key: {
+      username: senderName,
+    },
+   
+    ReturnValues: 'ALL_NEW',
+    UpdateExpression: 'set #messages = :item',
+    ExpressionAttributeNames: {
+      '#messages': 'messages'
+    },
+    ExpressionAttributeValues: {
+      ':item': senderItem
+    }
+  };
+    result.push(await docClient.update(params).promise());
+ 
+ 
+   params = {
+    TableName: 'GF-userData',
+    Key: {
+      username: receiverName,
+    },
+   
+    ReturnValues: 'ALL_NEW',
+    UpdateExpression: 'set #messages = :item',
+    ExpressionAttributeNames: {
+      '#messages': 'messages'
+    },
+    ExpressionAttributeValues: {
+      ':item': receiverItem
+    }
+  };
+    result.push(await docClient.update(params).promise());
+ 
+  
+   return result;
+    
+    
+}
+
+
+
+exports.handler = async (event) => {
+  
+  const body=JSON.parse(event.body);
+  //const body=event.body;
+  
+  const receiver=body.receiver;
+  const sender=body.sender;
+  const message=body.message;
+  
+  let senderData = await getData(sender);
+  let receiverData = await getData(receiver);
+  
+  senderData=senderData.userDetails;
+  receiverData=receiverData.userDetails;
+  
+   /* const receiverConnectionDetails=await getConnectionId(receiver);
+            
+        try{
+          const result=  await replyToMessage({
+                    "senderName":sender,
+                    "message":message
+                  },"message", receiverConnectionDetails.Item.connectionId);
+          
+        }
+        catch (err){
+      	console.log(err);
+      }
+                     */   
+            
+            
+  
+ // console.log(receiverData);
+//  console.log(senderData);
+  
+  let senderMessages=senderData.messages;
+  let receiverMessages=receiverData.messages;
+  
+  
+  let index=-1;
+  
+  
+   senderData.messages.map((msg,Index)=>{
+     
+      if(msg.username===receiver)
+      {
+        index=Index;
+        
+      }
+      
+    
+  });
+  
+  
+  let senderItem;
+  
+  
+  if(index!=-1)
+  {
+    senderItem= {
+          "username":receiver,
+          "profilepic":receiverData.profileUrl,
+          "messages":[...senderMessages[index].messages,message+"#me"]
+      };
+      
+        senderMessages[index]=senderItem;
+    
+  }
+  else
+  {
+    senderItem= {
+          "username":receiver,
+          "profilepic":receiverData.profileUrl,
+          "messages":[message+"#me"]
+      };
+      
+      
+        senderMessages.push(senderItem);
+  
+  }
+      
+      
+      
+      
+   
+  index=-1;
+ 
+  receiverData.messages.map((msg,Index)=>{
+     
+      if(msg.username===sender)
+      {
+        index=Index;
+        
+      }
+      
+    
+  });
+  
+ 
+  let receiverItem;
+  
+  if(index!=-1)
+  {
+      receiverItem= {
+          "username":sender,
+          "profilepic":senderData.profileUrl,
+          "messages":[...receiverMessages[index].messages,message+"#other"]
+      };
+      
+    receiverMessages[index]=receiverItem;
+    
+  }
+  else
+  {
+       receiverItem= {
+          "username":sender,
+          "profilepic":senderData.profileUrl,
+          "messages":[message+"#other"]
+      };
+      receiverMessages.push(receiverItem);
+    
+  }
+  
+  console.log("inside sender messages");
+  
+  
+  console.log(senderMessages);
+  
+  console.log("inside receiver messages");
+  console.log(receiverMessages);
+  
+
+      
+  
+  
+    
+      
+      let finalData= await addMessage(sender,receiver,senderMessages,receiverMessages);
+    
+     senderData = await getData(sender);
+     receiverData = await getData(receiver);
+  
+  
+    //console.log(senderData.userDetails.messages);
+    //console.log(receiverData.userDetails.messages);
+  let sendermsg=senderData.userDetails.messages;
+  let receivermsg=receiverData.userDetails.messages;
+      
+      
+      //console.log(sendermsg);
+      
+      //console.log(receivermsg);
+      
+      
+   
+    const receiverConnectionDetails=await getConnectionId(receiver);
+    const senderConnectionDetails=await getConnectionId(sender);
+            
+      //sending modified data to sender      
+            
+       /* try{
+          const result=  await replyToMessage({
+                    
+                    "messages":sendermsg
+                  },"message", senderConnectionDetails.Item.connectionId);
+          
+        }
+        catch (err){
+      	console.log(err);
+      }*/
+      
+      //sending modified data to receiver     
+            
+        try{
+          const result=  await replyToMessage({
+                    "sender":sender,
+                    "message":message
+                  },"message", receiverConnectionDetails.Item.connectionId);
+          
+        }
+        catch (err){
+      	console.log(err);
+      }
+      
+      
+      
+      
+      
+      
+      
+       const response = {
+                statusCode: 200,
+                body: JSON.stringify({
+                    
+                })
+            };
+            return response;
+            
+  
+  
+};
+
+
+async function replyToMessage(response,type, connectionId) {
+   //console.log(connectionId);
+   //console.log(response);
+    const params = {
+      ConnectionId: connectionId,
+      Data: Buffer.from(JSON.stringify( {message: response,"type":type }))
+    };
+    
+    //console.log(params);
+
+    return api.postToConnection(params).promise()
+}
+

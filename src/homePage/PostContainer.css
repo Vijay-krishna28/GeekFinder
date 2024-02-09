@@ -1,0 +1,23 @@
+.postContainerMain
+{
+  flex:0.6;
+  margin-left: 2%;
+  align-items: center;
+    
+}
+
+.postContainerMain > p
+{
+  color: white;
+    
+}
+
+.post_render
+{
+
+     display: flex;
+     flex-direction: column;
+     margin: 5%;
+  
+
+}

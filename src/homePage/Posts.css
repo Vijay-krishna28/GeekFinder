@@ -1,0 +1,153 @@
+.post_mainContainer
+{
+    display: flex;
+    flex-direction: row;
+
+}
+
+.post_container
+{
+   flex:0.3;
+   display: flex;
+   flex-direction: column;
+   border: 2px solid white;
+   width:500px;
+
+
+}
+
+.headerRight
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 35%;
+
+}
+
+.headerRight >p{
+
+  color: white;
+}
+
+.postPic
+{
+   object-fit: contain;
+   width:  500px;
+
+}
+
+.userDetailsContainer
+{
+    margin-top: 1%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.commentsSection
+{
+   flex:0.9;
+
+}
+
+.MoreDetails >p
+{
+  color: white;
+}
+
+.MoreDetails>button
+{
+  background-color: black;
+  color: white;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+}
+
+.userProfilePic
+{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.ExternalLinksContainer
+{
+    margin-top: 1%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+
+}
+
+.ExternalLinksImages
+{
+    object-fit: contain;
+    width: 100px;
+}
+
+
+
+.ExternalLinksButton
+{
+    border-radius: 25%;
+
+}
+
+.versionsContainer
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    height:150px;
+    scrollbar-width: 5px;
+    margin-top: 2%;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 5px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: gray; 
+    border-radius: 5px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: darkgray
+  }
+
+  .versionContainer
+{
+   
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-top: 5%;
+    
+
+}
+
+.versionButton
+{
+    width: 100px;
+    height: 25px;
+}
+
+
+.bottomContainerFooter
+{
+  
+  color: white;
+}

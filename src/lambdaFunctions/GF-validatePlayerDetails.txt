@@ -1,0 +1,126 @@
+const AWS = require('aws-sdk');
+//const https = require('https');
+const Cognito = new AWS.CognitoIdentityServiceProvider({region: 'us-east-1'});
+
+
+
+
+exports.handler = async (event) => {
+    if (event.userName && event.userPoolId && event.request && event.request.userAttributes && event.request.userAttributes.email) {
+       //searching for mail
+       
+        let cognitoRequestParams = {
+            UserPoolId: event.userPoolId,
+            Filter: 'email = "' + event.request.userAttributes.email + '"'
+        };
+        
+        await Cognito.listUsers(cognitoRequestParams)
+        .promise().then(data => {
+            if (data.Users.length > 0 && data.Users[0].Username.toLowerCase() != event.userName.toLowerCase()) {
+                throw new Error('An account already exists for that email');
+            }
+        })
+        .catch(err => {
+            throw(err);
+        });
+        
+        //  searching for username 
+        
+        
+       cognitoRequestParams = {
+            UserPoolId: event.userPoolId,
+            Filter: 'preferred_username = "' + event.request.userAttributes.preferred_username + '"'
+        };
+        
+        await Cognito.listUsers(cognitoRequestParams)
+        .promise().then(data => {
+            if (data.Users.length > 0 && data.Users[0].Username.toLowerCase() != event.userName.toLowerCase()) {
+                throw new Error('An account with same username already exists');
+            }
+        })
+        .catch(err => {
+            throw(err);
+        });
+        
+          cognitoRequestParams = {
+            UserPoolId: event.userPoolId,
+            Filter: 'phone_number = "' + event.request.userAttributes.phone_number + '"'
+        };
+        
+        await Cognito.listUsers(cognitoRequestParams)
+        .promise().then(data => {
+            if (data.Users.length > 0 && data.Users[0].Username.toLowerCase() != event.userName.toLowerCase()) {
+                throw new Error('An account with same phone_number already exists');
+            }
+        })
+        .catch(err => {
+            throw(err);
+        });
+        
+        
+        
+        
+    }
+    
+   // console.log(event);
+    
+   /* let profileUrl;
+    
+    if(event.request.userAttributes.profile)
+    {
+        //console.log("inside get event");
+        
+        const accessToken=event.request.userAttributes.profile;
+        const facebookUserId=event.userName.substring(9);
+      
+        const apiUrl="https://graph.facebook.com/"+facebookUserId+"/?fields=picture&type=small&access_token="+accessToken;
+        //console.log(apiUrl);
+        
+     
+           const myPromise= new Promise((resolve, reject) => {                
+                    
+                        const options = {
+                              hostname: apiUrl,
+                              method: 'GET'
+                            };
+                            
+                            const req = https.get(apiUrl, (res) => {
+                                 res.setEncoding('utf8');
+                             
+                            
+                              res.on('data', (d) => {
+                                  const data=JSON.parse(d);
+                                  profileUrl=data.picture.data.url;
+                                console.log(profileUrl);
+                                return event;
+                                 
+                              });
+                              
+                              
+                            });
+                            
+                             return event;
+       
+                     });
+                     
+                     
+                myPromise.then((message) => {  
+                  // console.log(event);     
+                });     
+                                     
+   //             console.log(event);      
+   
+   
+ }*/
+             
+   
+   
+
+
+
+
+
+ return event;
+
+
+};
